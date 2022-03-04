@@ -1,13 +1,11 @@
 package wuzzuf_jobs;
 
-import java.util.List;
-
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
 public interface wuzzufDoa {
-	public Dataset<Row> readDataSet(String filenam);
+    Dataset<Row> readDataSet(String filename);
 
-	public void displayDataSet(Dataset<Row> csvDataFrame);
+    void displayDataSet(Dataset<Row> csvDataFrame);
 
 }

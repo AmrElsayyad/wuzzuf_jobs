@@ -6,13 +6,13 @@ import org.apache.spark.sql.Row;
 
 public class jobsAnalysis {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		wuzzufDoaImpl w = new wuzzufDoaImpl();
-		// load the data frame using sparkSesson
-		Dataset<Row> csvDataFrame = w.readDataSet("src/main/resources/Wuzzuf_Jobs.csv");
-		w.displayDataSet(csvDataFrame);
+        wuzzufDoaImpl wuzzufDS = new wuzzufDoaImpl();
+        // load the data frame using sparkSession
+        Dataset<Row> csvDataFrame = wuzzufDS.readDataSet("src/main/resources/Wuzzuf_Jobs.csv");
+        wuzzufDS.displayDataSet(csvDataFrame);
 
-	}
+    }
 
 }
