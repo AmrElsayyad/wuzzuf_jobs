@@ -24,6 +24,9 @@ public class jobsAnalysis {
         ds = dao.cleanDataset();
         ds.show();
 
+        // display number of jobs per company
+        dao.jobsPerCompany();
+
     }
 
 }

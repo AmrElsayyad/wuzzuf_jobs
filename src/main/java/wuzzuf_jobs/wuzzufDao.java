@@ -13,4 +13,6 @@ public interface wuzzufDao {
 
     Dataset<Row> cleanDataset();
 
+    void jobsPerCompany();
+
 }
