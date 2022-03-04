@@ -1,6 +1,6 @@
 package wuzzuf_jobs;
 
-public class wuzzuf {
+public class job {
     String title;
     String company;
     String location;
@@ -11,7 +11,7 @@ public class wuzzuf {
     String skills;
 
 
-    public wuzzuf(String title, String company, String location, String type, String level, String yearsExp, String country, String skills) {
+    public job(String title, String company, String location, String type, String level, String yearsExp, String country, String skills) {
         this.title = title;
         this.company = company;
         this.location = location;

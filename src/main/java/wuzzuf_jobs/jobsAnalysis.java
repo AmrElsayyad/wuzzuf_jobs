@@ -8,10 +8,21 @@ public class jobsAnalysis {
 
     public static void main(String[] args) {
 
-        wuzzufDoaImpl wuzzufDS = new wuzzufDoaImpl();
-        // load the data frame using sparkSession
-        Dataset<Row> csvDataFrame = wuzzufDS.readDataSet("src/main/resources/Wuzzuf_Jobs.csv");
-        wuzzufDS.displayDataSet(csvDataFrame);
+        wuzzufDaoImpl dao = new wuzzufDaoImpl();
+        Dataset<Row> ds = dao.readDataset("src/main/resources/Wuzzuf_Jobs.csv");
+
+        // display summary statistics
+        System.out.println("Summary:");
+        ds.printSchema();
+        ds.summary().show();
+
+        // displaying the dataset
+        System.out.println("Dataset:");
+        ds.show();
+
+        // cleaning dataset
+        ds = dao.cleanDataset();
+        ds.show();
 
     }
 
