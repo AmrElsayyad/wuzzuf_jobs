@@ -6,9 +6,9 @@ import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.knowm.xchart.PieChart;
-import org.knowm.xchart.PieChartBuilder;
-import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.*;
+
+import java.util.stream.Collectors;
 
 import static org.apache.spark.sql.functions.regexp_replace;
 
@@ -47,14 +47,15 @@ public class wuzzufDaoImpl implements wuzzufDao {
     }
 
     @Override
-    public Dataset<Row> cleanDataset() {
+    public Dataset<Row> cleanDataset(boolean inline) {
 
         Dataset<Row> ds = dataset;
 
         // remove " Yrs of Exp" from "YearsExp" column
-        System.out.println("Removing \" Yrs of Exp\" from \"YearsExp\" column");
+        System.out.println("Removing \" Yrs of Exp\" from \"YearsExp\" column...\n");
         ds = ds.withColumn("YearsExp", regexp_replace(ds.col("YearsExp"), " Yrs of Exp", ""));
         ds.show();
+        System.out.println();
 
         // count null values in "YearsExp" column
         ds.createOrReplaceTempView("wuzzuf");
@@ -65,36 +66,88 @@ public class wuzzufDaoImpl implements wuzzufDao {
         ).show();
 
         // drop rows with "YearsExp" equal null
-        System.out.println("Dropping rows with \"YearsExp\" equal null");
+        System.out.println("Dropping rows with \"YearsExp\" = null...\n");
         ds = ds.where("YearsExp <> \"null\"");
         ds.summary().show();
+        System.out.println();
 
         // remove duplicates
-        System.out.println("Removing duplicates");
+        System.out.println("Removing duplicates...\n");
         ds = ds.dropDuplicates();
         ds.summary().show();
+        System.out.println();
+
+        // check if inline
+        if (inline) {
+            dataset = ds;
+        }
 
         return ds;
     }
 
     @Override
-    public void jobsPerCompany() {
+    public Dataset<Row> jobsPerCompany() {
 
         dataset.createOrReplaceTempView("wuzzuf");
-        Dataset<Row> jobsPerCompany = dataset.sqlContext().sql(
+
+        return dataset.sqlContext().sql(
                 "SELECT Company, COUNT(*) AS jobs_count " +
                         "FROM wuzzuf " +
                         "GROUP BY Company " +
                         "ORDER BY jobs_count DESC"
         );
+    }
 
-        PieChart pieChart = new PieChartBuilder().title("Jobs per company").build();
+    @Override
+    public Dataset<Row> mostPopularJobTitles() {
+
+        dataset.createOrReplaceTempView("wuzzuf");
+
+        return dataset.sqlContext().sql(
+                "SELECT Title, COUNT(*) AS Count " +
+                        "FROM wuzzuf " +
+                        "GROUP BY Title " +
+                        "ORDER BY Count DESC"
+        );
+    }
+
+    @Override
+    public Dataset<Row> mostPopularAreas() {
+
+        dataset.createOrReplaceTempView("wuzzuf");
+
+        return dataset.sqlContext().sql(
+                "SELECT Location, COUNT(*) AS Count " +
+                        "FROM wuzzuf " +
+                        "GROUP BY Location " +
+                        "ORDER BY Count DESC"
+        );
+    }
+
+    @Override
+    public void displayPieChart(Dataset<Row> dataset, String title) {
+
+        PieChart pieChart = new PieChartBuilder().title(title).build();
         for (int i = 0; i < 5; i++) {
-            Row row = jobsPerCompany.collectAsList().get(i);
+            Row row = dataset.collectAsList().get(i);
             pieChart.addSeries(row.getString(0), row.getLong(1));
         }
-        pieChart.addSeries("Other", jobsPerCompany.except(jobsPerCompany.limit(5)).count());
+        pieChart.addSeries("Other", dataset.except(dataset.limit(5)).count());
         new SwingWrapper<>(pieChart).displayChart();
 
     }
+
+    @Override
+    public void displayBarChart(Dataset<Row> dataset, String title, String xLabel, String yLabel) {
+
+        CategoryChart barChart = new CategoryChartBuilder().title(title).xAxisTitle(xLabel).yAxisTitle(yLabel).build();
+        barChart.getStyler().setXAxisLabelRotation(45);
+        barChart.addSeries(xLabel,
+                dataset.limit(10).collectAsList().stream().map(row -> row.getString(0)).collect(Collectors.toList()),
+                dataset.limit(10).collectAsList().stream().map(row -> row.getLong(1)).collect(Collectors.toList())
+        );
+        new SwingWrapper(barChart).displayChart();
+
+    }
+
 }

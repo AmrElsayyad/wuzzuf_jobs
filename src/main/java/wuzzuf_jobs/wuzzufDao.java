@@ -1,7 +1,6 @@
 package wuzzuf_jobs;
 
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
+import org.apache.spark.sql.*;
 
 public interface wuzzufDao {
 
@@ -11,8 +10,16 @@ public interface wuzzufDao {
 
     Dataset<Row> readDataset(String filename);
 
-    Dataset<Row> cleanDataset();
+    Dataset<Row> cleanDataset(boolean inline);
 
-    void jobsPerCompany();
+    Dataset<Row> jobsPerCompany();
+
+    Dataset<Row> mostPopularJobTitles();
+
+    Dataset<Row> mostPopularAreas();
+
+    void displayPieChart(Dataset<Row> dataset, String title);
+
+    void displayBarChart(Dataset<Row> dataset, String title, String xLabel, String yLabel);
 
 }

@@ -1,7 +1,6 @@
 package wuzzuf_jobs;
 
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
+import org.apache.spark.sql.*;
 
 
 public class jobsAnalysis {
@@ -12,20 +11,50 @@ public class jobsAnalysis {
         Dataset<Row> ds = dao.readDataset("src/main/resources/Wuzzuf_Jobs.csv");
 
         // display summary statistics
-        System.out.println("Summary:");
+        System.out.println("\n=== Summary:\n");
         ds.printSchema();
         ds.summary().show();
+        System.out.println();
 
         // displaying the dataset
-        System.out.println("Dataset:");
+        System.out.println("=== Dataset:\n");
         ds.show();
+        System.out.println();
 
         // cleaning dataset
-        ds = dao.cleanDataset();
+        ds = dao.cleanDataset(true);
+
+        // display dataset after cleaning
+        System.out.println("=== Dataset after cleaning:");
         ds.show();
+        System.out.println();
 
         // display number of jobs per company
-        dao.jobsPerCompany();
+        System.out.println("=== Jobs per company:\n");
+        Dataset<Row> jobsPerCompany = dao.jobsPerCompany();
+        jobsPerCompany.show();
+        System.out.println();
+
+        // display pie chart for jobs per company
+        dao.displayPieChart(jobsPerCompany, "Jobs per company");
+
+        // display most popular job titles
+        System.out.println("=== Most Popular Job Titles:\n");
+        Dataset<Row> mostPopularJobTitles = dao.mostPopularJobTitles();
+        mostPopularJobTitles.show();
+        System.out.println();
+
+        // display bar chart of most popular job titles
+        dao.displayBarChart(mostPopularJobTitles, "Most Popular Job Titles", "Job Titles", "Job Count");
+
+        // display most popular job areas
+        System.out.println("=== Most Popular Areas:\n");
+        Dataset<Row> mostPopularAreas = dao.mostPopularAreas();
+        mostPopularAreas.show();
+        System.out.println();
+
+        // display bar chart of most popular areas
+        dao.displayBarChart(mostPopularAreas, "Most Popular Areas", "Area", "Job Count");
 
     }
 
