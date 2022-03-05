@@ -8,7 +8,7 @@ public class jobsAnalysis {
     public static void main(String[] args) {
 
         wuzzufDaoImpl dao = new wuzzufDaoImpl();
-        Dataset<Row> ds = dao.readDataset("src/main/resources/Wuzzuf_Jobs.csv");
+        Dataset<job> ds = dao.readDataset("src/main/resources/Wuzzuf_Jobs.csv");
 
         // display summary statistics
         System.out.println("\n=== Summary:\n");
@@ -29,7 +29,7 @@ public class jobsAnalysis {
         ds.show();
         System.out.println();
 
-        // display number of jobs per company
+        // get number of jobs per company
         System.out.println("=== Jobs per company:\n");
         Dataset<Row> jobsPerCompany = dao.jobsPerCompany();
         jobsPerCompany.show();
@@ -38,7 +38,7 @@ public class jobsAnalysis {
         // display pie chart for jobs per company
         dao.displayPieChart(jobsPerCompany, "Jobs per company");
 
-        // display most popular job titles
+        // get most popular job titles
         System.out.println("=== Most Popular Job Titles:\n");
         Dataset<Row> mostPopularJobTitles = dao.mostPopularJobTitles();
         mostPopularJobTitles.show();
@@ -47,7 +47,7 @@ public class jobsAnalysis {
         // display bar chart of most popular job titles
         dao.displayBarChart(mostPopularJobTitles, "Most Popular Job Titles", "Job Titles", "Job Count");
 
-        // display most popular job areas
+        // get most popular job areas
         System.out.println("=== Most Popular Areas:\n");
         Dataset<Row> mostPopularAreas = dao.mostPopularAreas();
         mostPopularAreas.show();
@@ -55,6 +55,10 @@ public class jobsAnalysis {
 
         // display bar chart of most popular areas
         dao.displayBarChart(mostPopularAreas, "Most Popular Areas", "Area", "Job Count");
+
+        // get most demanded skills
+        Dataset<Row> mostDemandedSkills = dao.getMostDemandedSkills();
+        mostDemandedSkills.show();
 
     }
 
