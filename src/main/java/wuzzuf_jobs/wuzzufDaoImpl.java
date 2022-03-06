@@ -2,6 +2,7 @@ package wuzzuf_jobs;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.sql.*;
 import org.knowm.xchart.*;
 
@@ -141,6 +142,11 @@ public class wuzzufDaoImpl implements wuzzufDao {
                         "GROUP BY skill " +
                         "ORDER BY count DESC "
         );
+    }
+
+    public Dataset<Row> factorizeColumn(String column) {
+        StringIndexer indexer = new StringIndexer().setInputCol(column).setOutputCol(column + "_index");
+        return indexer.fit(dataset).transform(dataset);
     }
 
     @Override

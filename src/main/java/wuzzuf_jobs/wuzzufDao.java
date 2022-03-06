@@ -50,6 +50,8 @@ public interface wuzzufDao {
 
     Dataset<Row> getMostDemandedSkills();
 
+    Dataset<Row> factorizeColumn(String column);
+
     void displayPieChart(Dataset<Row> dataset, String title);
 
     void displayBarChart(Dataset<Row> dataset, String title, String xLabel, String yLabel);
