@@ -1,38 +1,64 @@
 package wuzzuf_jobs;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.StructType;
 import org.knowm.xchart.*;
+import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 import static org.apache.spark.sql.functions.regexp_replace;
 
-public class wuzzufDaoImpl implements wuzzufDao {
+@Service
+public class WuzzufDaoImpl implements WuzzufDao {
 
-    private Dataset<job> dataset;
+    private Dataset<Job> dataset;
 
     @Override
-    public Dataset<job> getDataset() {
+    public Dataset<Job> getDataset() {
         return dataset;
     }
 
     @Override
-    public void setDataset(Dataset<job> dataset) {
+    public void setDataset(Dataset<Job> dataset) {
         this.dataset = dataset;
     }
 
-    @Override
-    public Dataset<job> mapDataset(Dataset<Row> dataset) {
-        return dataset.map(wuzzufDao::rowToJob, Encoders.bean(job.class));
+    @SuppressWarnings("SpellCheckingInspection")
+    public static Job rowToJob(Row row) {
+        StructType schema = row.schema();
+        int title = -1, company = -1, location = -1, type = -1, level = -1, yearsExp = -1, country = -1, skills = -1;
+        String[] fieldNames = schema.fieldNames();
+        for (int i = 0; i < fieldNames.length; i++) {
+            if (fieldNames[i].equalsIgnoreCase("title")) {
+                title = i;
+            } else if (fieldNames[i].equalsIgnoreCase("company")) {
+                company = i;
+            } else if (fieldNames[i].equalsIgnoreCase("location")) {
+                location = i;
+            } else if (fieldNames[i].equalsIgnoreCase("type")) {
+                type = i;
+            } else if (fieldNames[i].equalsIgnoreCase("level")) {
+                level = i;
+            } else if (fieldNames[i].equalsIgnoreCase("yearsexp")) {
+                yearsExp = i;
+            } else if (fieldNames[i].equalsIgnoreCase("country")) {
+                country = i;
+            } else if (fieldNames[i].equalsIgnoreCase("skills")) {
+                skills = i;
+            }
+        }
+        return new Job(row.getString(title), row.getString(company), row.getString(location), row.getString(type), row.getString(level), row.getString(yearsExp), row.getString(country), row.getString(skills));
+    }
+
+    public static Dataset<Job> mapDataset(Dataset<Row> dataset) {
+        return dataset.map(WuzzufDaoImpl::rowToJob, Encoders.bean(Job.class));
     }
 
     @Override
-    public Dataset<job> readDataset(String filename) {
-
-        Logger.getLogger("org.apache").setLevel(Level.OFF);
+    public Dataset<Job> readDataset(String filename) {
 
         SparkSession.Builder builder = SparkSession.builder();
         builder.appName("WuzzufJobs");
@@ -49,43 +75,29 @@ public class wuzzufDaoImpl implements wuzzufDao {
     }
 
     @Override
-    public Dataset<job> cleanDataset(boolean inline) {
+    public StructType getStructure() {
+        return dataset.schema();
+    }
 
-        Dataset<job> ds = dataset;
+    @Override
+    public Dataset<Row> getSummary() {
+        return dataset.summary();
+    }
+
+    @Override
+    public Dataset<Job> cleanDataset() {
 
         // remove " Yrs of Exp" from "YearsExp" column
-        System.out.println("Removing \" Yrs of Exp\" from \"YearsExp\" column...\n");
-        ds = mapDataset(ds.withColumn("yearsExp",
-                regexp_replace(ds.col("yearsExp"), " Yrs of Exp", "")));
-        ds.show();
-        System.out.println();
-
-        // count null values in "YearsExp" column
-        ds.createOrReplaceTempView("wuzzuf");
-        ds.sqlContext().sql(
-                "SELECT COUNT(*) AS YearsExp_nulls " +
-                        "FROM wuzzuf " +
-                        "WHERE YearsExp == \"null\""
-        ).show();
+        dataset = mapDataset(dataset.withColumn("yearsExp",
+                regexp_replace(dataset.col("yearsExp"), " Yrs of Exp", "")));
 
         // drop jobs with "YearsExp" equal null
-        System.out.println("Dropping jobs with \"YearsExp\" = null...\n");
-        ds = ds.where("YearsExp <> \"null\"");
-        ds.summary().show();
-        System.out.println();
+        dataset = dataset.where("yearsExp <> \"null\"");
 
         // remove duplicates
-        System.out.println("Removing duplicates...\n");
-        ds = ds.dropDuplicates();
-        ds.summary().show();
-        System.out.println();
+        dataset = dataset.dropDuplicates();
 
-        // check if inline
-        if (inline) {
-            dataset = ds;
-        }
-
-        return ds;
+        return dataset;
     }
 
     @Override
@@ -144,13 +156,8 @@ public class wuzzufDaoImpl implements wuzzufDao {
         );
     }
 
-    public Dataset<Row> factorizeColumn(String column) {
-        StringIndexer indexer = new StringIndexer().setInputCol(column).setOutputCol(column + "_index");
-        return indexer.fit(dataset).transform(dataset);
-    }
-
     @Override
-    public void displayPieChart(Dataset<Row> dataset, String title) {
+    public void displayPieChart(Dataset<Row> dataset, String title) throws IOException {
 
         PieChart pieChart = new PieChartBuilder().title(title).build();
         for (int i = 0; i < 5; i++) {
@@ -158,12 +165,14 @@ public class wuzzufDaoImpl implements wuzzufDao {
             pieChart.addSeries(job.getString(0), job.getLong(1));
         }
         pieChart.addSeries("Other", dataset.except(dataset.limit(5)).count());
-        new SwingWrapper<>(pieChart).displayChart();
 
-    }
+
+        BitmapEncoder.saveBitmap(pieChart,
+                "src/main/resources/static/" + title.replaceAll("\\s", "") + "PieChart",
+                BitmapEncoder.BitmapFormat.JPG);    }
 
     @Override
-    public void displayBarChart(Dataset<Row> dataset, String title, String xLabel, String yLabel) {
+    public void displayBarChart(Dataset<Row> dataset, String title, String xLabel, String yLabel) throws IOException {
 
         CategoryChart barChart = new CategoryChartBuilder().title(title).xAxisTitle(xLabel).yAxisTitle(yLabel).build();
         barChart.getStyler().setXAxisLabelRotation(45);
@@ -171,9 +180,15 @@ public class wuzzufDaoImpl implements wuzzufDao {
                 dataset.limit(10).collectAsList().stream().map(job -> job.getString(0)).collect(Collectors.toList()),
                 dataset.limit(10).collectAsList().stream().map(job -> job.getLong(1)).collect(Collectors.toList())
         );
-        //noinspection rawtypes,unchecked
-        new SwingWrapper(barChart).displayChart();
 
+        BitmapEncoder.saveBitmap(barChart,
+                "src/main/resources/static/" + title.replaceAll("\\s", "") + "BarChart",
+                BitmapEncoder.BitmapFormat.JPG);
+    }
+
+    public Dataset<Row> factorizeColumn(String column) {
+        StringIndexer indexer = new StringIndexer().setInputCol(column).setOutputCol(column + "_index");
+        return indexer.fit(dataset).transform(dataset);
     }
 
 }
