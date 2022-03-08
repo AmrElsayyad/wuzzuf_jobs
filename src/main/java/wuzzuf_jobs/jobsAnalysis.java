@@ -57,8 +57,16 @@ public class jobsAnalysis {
         dao.displayBarChart(mostPopularAreas, "Most Popular Areas", "Area", "Job Count");
 
         // get most demanded skills
+        System.out.println("=== Most Demanded Skills:\n");
         Dataset<Row> mostDemandedSkills = dao.getMostDemandedSkills();
         mostDemandedSkills.show();
+        System.out.println();
+
+        // factorizing "YearsExp" column
+        System.out.println("=== Factorizing \"YearsExp\" column:\n");
+        Dataset<Row> yearsExp = dao.factorizeColumn("yearsExp");
+        yearsExp.show();
+        System.out.println();
 
     }
 
