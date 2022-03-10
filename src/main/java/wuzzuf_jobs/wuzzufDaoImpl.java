@@ -6,6 +6,7 @@ import org.apache.spark.sql.types.StructType;
 import org.knowm.xchart.*;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
@@ -168,7 +169,7 @@ public class WuzzufDaoImpl implements WuzzufDao {
 
 
         BitmapEncoder.saveBitmap(pieChart,
-                "src/main/resources/static/" + title.replaceAll("\\s", "") + "PieChart",
+                "src/main/resources/static/img/" + title.replaceAll("\\s", "") + "PieChart",
                 BitmapEncoder.BitmapFormat.JPG);    }
 
     @Override
@@ -181,8 +182,10 @@ public class WuzzufDaoImpl implements WuzzufDao {
                 dataset.limit(10).collectAsList().stream().map(job -> job.getLong(1)).collect(Collectors.toList())
         );
 
+        barChart.getStyler().setSeriesColors(new Color[]{new Color(24, 83, 74)});
+
         BitmapEncoder.saveBitmap(barChart,
-                "src/main/resources/static/" + title.replaceAll("\\s", "") + "BarChart",
+                "src/main/resources/static/img/" + title.replaceAll("\\s", "") + "BarChart",
                 BitmapEncoder.BitmapFormat.JPG);
     }
 

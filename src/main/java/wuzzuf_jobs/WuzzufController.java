@@ -22,7 +22,8 @@ public class WuzzufController {
     }
 
     public static String datasetToTable(Dataset<?> dataset) {
-        String header = "<table class='w3-table-all'><tr><th>" + String.join("</th><th>", dataset.columns()) + "</th></tr>";
+        String header = "<table class='w3-table-all'><tr><th>" +
+                String.join("</th><th>", dataset.columns()) + "</th></tr>";
         String body = dataset.toDF().collectAsList().stream().map(row -> "<tr><td>" + row.mkString("</td><td>"))
                 .collect(Collectors.joining("</td></tr>"));
         return header + body;
@@ -41,8 +42,9 @@ public class WuzzufController {
 
     @GetMapping("Dataset_Structure")
     public String DatasetStructure(Model model) {
-        model.addAttribute("body", wuzzufDao.getStructure().treeString().replaceAll("root\n \\|-- ", "")
-                .replaceAll(" \\|-- ", "</br>"));
+        model.addAttribute("body",
+                wuzzufDao.getStructure().treeString().replaceAll("root\n \\|-- ", "")
+                        .replaceAll(" \\|-- ", "</br>"));
         return "template";
     }
 
@@ -67,7 +69,7 @@ public class WuzzufController {
     @GetMapping("Most_Demanding_Companies_Pie_Chart")
     public String MostDemandingCompaniesPieChart(Model model) throws IOException {
         wuzzufDao.displayPieChart(wuzzufDao.jobsPerCompany(), "Jobs Per Company");
-        model.addAttribute("body", "<img src='JobsPerCompanyPieChart.jpg'>");
+        model.addAttribute("body", "<img src='/img/JobsPerCompanyPieChart.jpg'>");
         return "template";
     }
 
@@ -79,8 +81,11 @@ public class WuzzufController {
 
     @GetMapping("Most_Popular_Job_Titles_Bar_Chart")
     public String MostPopularJobTitlesBarChart(Model model) throws IOException {
-        wuzzufDao.displayBarChart(wuzzufDao.mostPopularJobTitles(), "Most Popular Job Titles", "Job Title", "Count");
-        model.addAttribute("body", "<img src='MostPopularJobTitlesBarChart.jpg'>");
+        wuzzufDao.displayBarChart(wuzzufDao.mostPopularJobTitles(),
+                "Most Popular Job Titles",
+                "Job Title",
+                "Count");
+        model.addAttribute("body", "<img src='/img/MostPopularJobTitlesBarChart.jpg'>");
         return "template";
     }
 
@@ -92,8 +97,11 @@ public class WuzzufController {
 
     @GetMapping("Most_Popular_Areas_Bar_Chart")
     public String MostPopularAreasBarChart(Model model) throws IOException {
-        wuzzufDao.displayBarChart(wuzzufDao.mostPopularAreas(), "Most Popular Areas", "Area", "Count");
-        model.addAttribute("body", "<img src='MostPopularAreasBarChart.jpg'>");
+        wuzzufDao.displayBarChart(wuzzufDao.mostPopularAreas(),
+                "Most Popular Areas",
+                "Area",
+                "Count");
+        model.addAttribute("body", "<img src='/img/MostPopularAreasBarChart.jpg'>");
         return "template";
     }
 
