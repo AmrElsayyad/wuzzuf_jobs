@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Wuzzuf Jobs Analysis</title>
     <meta charset="UTF-8">
@@ -67,8 +67,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
         <h1 class="w3-center"><a href="http://localhost:8080" style="color:Black">Wuzzuf Jobs Analysis</a></h1>
     </header>
 
-    <div class="w3-container w3-center" style="overflow-x: scroll">
-        <!-- here -->
+    <div class="w3-container w3-center" style="overflow-x: scroll" th:utext="${body}">
     </div>
 
     <!-- End page content -->
