@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Wuzzuf Jobs Analysis</title>
     <meta charset="UTF-8">
@@ -16,7 +16,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 <body class="w3-content" style="max-width:2000px">
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
+<nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top w3-padding-24" style="z-index:3;width:270px" id="mySidebar">
     <div class="w3-large w3-text-grey" style="font-weight:bold">
         <a href="http://localhost:8080/View_Dataset" class="w3-bar-item w3-button">Dataset</a>
         <a href="http://localhost:8080/Dataset_Structure" class="w3-bar-item w3-button">Structure</a>
@@ -57,7 +57,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:250px">
+<div class="w3-main" style="margin-left:270px">
 
     <!-- Push down content on small screens -->
     <div class="w3-hide-large" style="margin-top:83px"></div>
@@ -67,54 +67,11 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
         <h1 class="w3-center"><a href="http://localhost:8080" style="color:Black">Wuzzuf Jobs Analysis</a></h1>
     </header>
 
-    <div class="w3-container w3-black w3-padding-16" id="developers">
-        <h4 class="w3-text-white" style="padding: 0px 10px">Developers</h4>
+    <div class="w3-container w3-center" style="overflow-x: scroll" th:utext="${body}">
     </div>
-
-    <!-- Developers -->
-    <div class="w3-row" style="padding: 50px 0px">
-        <div class="w3-col l3">
-            <div class="w3-container w3-center">
-                <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="small" data-theme="light" data-type="VERTICAL" data-vanity="amrelsayyad" data-version="v1">
-                    <a class="badge-base__link LI-simple-link" href="https://eg.linkedin.com/in/amrelsayyad?trk=profile-badge"></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="w3-col l3">
-            <div class="w3-container w3-center">
-                <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="small" data-theme="light" data-type="VERTICAL" data-vanity="mariam-medhat-499b411bb" data-version="v1">
-                    <a class="badge-base__link LI-simple-link" href="https://eg.linkedin.com/in/mariam-medhat-499b411bb?trk=profile-badge"></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="w3-col l3">
-            <div class="w3-container w3-center">
-                <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="small" data-theme="light" data-type="VERTICAL" data-vanity="mohamedantergad" data-version="v1">
-                    <a class="badge-base__link LI-simple-link" href="https://eg.linkedin.com/in/mohamedantergad?trk=profile-badge"></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="w3-col l3">
-            <div class="w3-container w3-center">
-                <div class="badge-base LI-profile-badge" data-locale="en_US" data-size="small" data-theme="light" data-type="VERTICAL" data-vanity="walaa-ahmed-047931168" data-version="v1">
-                    <a class="badge-base__link LI-simple-link" href="https://eg.linkedin.com/in/walaa-ahmed-047931168?trk=profile-badge"></a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="w3-padding-64 w3-black w3-small w3-center" id="footer">
-    </footer>
 
     <!-- End page content -->
 </div>
-
-<!-- LinkedIn -->
-<script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
 
 <script>
 function companiesFunc() {
