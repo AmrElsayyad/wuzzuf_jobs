@@ -1,13 +1,11 @@
 package wuzzuf_jobs;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.spark.sql.Dataset;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
@@ -23,14 +21,11 @@ public class WuzzufController {
         this.wuzzufDao.readDataset("src/main/resources/Wuzzuf_Jobs.csv");
     }
 
-    public static ResponseEntity<String> getResponse(String body) throws IOException {
-        return ResponseEntity.ok(FileUtils.readFileToString(new File("src/main/resources/templates/home.html"))
-                .replaceFirst("</body>", "<div class=\"tabcontent\">" + body + "</div>" + "</body>"));
-    }
-
     public static String datasetToTable(Dataset<?> dataset) {
-        String header = "<table>\n" + "  <tr>\n" + "    <th>" + String.join("</th>\n" + "    <th>", dataset.columns()) + "</th>\n" + "  </tr>\n";
-        String body = dataset.toDF().collectAsList().stream().map(row -> "<tr>" + "<td>" + row.mkString("</td>" + "<td>")).collect(Collectors.joining("</td>" + "</tr>"));
+        String header = "<table class='w3-table-all'><tr><th>" +
+                String.join("</th><th>", dataset.columns()) + "</th></tr>";
+        String body = dataset.toDF().collectAsList().stream().map(row -> "<tr><td>" + row.mkString("</td><td>"))
+                .collect(Collectors.joining("</td></tr>"));
         return header + body;
     }
 
@@ -39,66 +34,86 @@ public class WuzzufController {
         return "home";
     }
 
-    @GetMapping("View-Dataset")
-    public ResponseEntity<String> ViewDataset() throws IOException {
-        return getResponse(datasetToTable(wuzzufDao.getDataset()));
+    @GetMapping("View_Dataset")
+    public String ViewDataset(Model model) {
+        model.addAttribute("body", datasetToTable(wuzzufDao.getDataset()));
+        return "template";
     }
 
-    @GetMapping("Dataset-Structure")
-    public ResponseEntity<String> DatasetStructure() throws IOException {
-        return getResponse(wuzzufDao.getStructure().treeString().replaceAll("\\|", "</br>\\|"));
+    @GetMapping("Dataset_Structure")
+    public String DatasetStructure(Model model) {
+        model.addAttribute("body",
+                wuzzufDao.getStructure().treeString().replaceAll("root\n \\|-- ", "")
+                        .replaceAll(" \\|-- ", "</br>"));
+        return "template";
     }
 
-    @GetMapping("Dataset-Summary")
-    public ResponseEntity<String> DatasetSummary() throws IOException {
-        return getResponse(datasetToTable(wuzzufDao.getSummary()));
+    @GetMapping("Dataset_Summary")
+    public String DatasetSummary(Model model) {
+        model.addAttribute("body", datasetToTable(wuzzufDao.getSummary()));
+        return "template";
     }
 
-    @GetMapping("Clean-Dataset")
-    public ResponseEntity<String> CleanDataset() throws IOException {
-        return getResponse(datasetToTable(wuzzufDao.cleanDataset()));
+    @GetMapping("Clean_Dataset")
+    public String CleanDataset(Model model) {
+        model.addAttribute("body", datasetToTable(wuzzufDao.cleanDataset()));
+        return "template";
     }
 
-    @GetMapping("Most-Demanding-Companies")
-    public ResponseEntity<String> MostDemandingCompanies() throws IOException {
-        return getResponse(datasetToTable(wuzzufDao.jobsPerCompany()));
+    @GetMapping("Most_Demanding_Companies")
+    public String MostDemandingCompanies(Model model) {
+        model.addAttribute("body", datasetToTable(wuzzufDao.jobsPerCompany()));
+        return "template";
     }
 
-    @GetMapping("Most-Demanding-Companies-Pie-Chart")
-    public ResponseEntity<String> MostDemandingCompaniesPieChart() throws IOException {
+    @GetMapping("Most_Demanding_Companies_Pie_Chart")
+    public String MostDemandingCompaniesPieChart(Model model) throws IOException {
         wuzzufDao.displayPieChart(wuzzufDao.jobsPerCompany(), "Jobs Per Company");
-        return getResponse("<img src='JobsPerCompanyPieChart.jpg'>");
+        model.addAttribute("body", "<img src='/img/JobsPerCompanyPieChart.jpg'>");
+        return "template";
     }
 
-    @GetMapping("Most-Popular-Job-Titles")
-    public ResponseEntity<String> MostPopularJobTitles() throws IOException {
-        return getResponse(datasetToTable(wuzzufDao.mostPopularJobTitles()));
+    @GetMapping("Most_Popular_Job_Titles")
+    public String MostPopularJobTitles(Model model) {
+        model.addAttribute("body", datasetToTable(wuzzufDao.mostPopularJobTitles()));
+        return "template";
     }
 
-    @GetMapping("Most-Popular-Job-Titles-Bar-Chart")
-    public ResponseEntity<String> MostPopularJobTitlesBarChart() throws IOException {
-        wuzzufDao.displayBarChart(wuzzufDao.mostPopularJobTitles(), "Most Popular Job Titles", "Job Title", "Count");
-        return getResponse("<img src='MostPopularJobTitlesBarChart.jpg'>");
+    @GetMapping("Most_Popular_Job_Titles_Bar_Chart")
+    public String MostPopularJobTitlesBarChart(Model model) throws IOException {
+        wuzzufDao.displayBarChart(wuzzufDao.mostPopularJobTitles(),
+                "Most Popular Job Titles",
+                "Job Title",
+                "Count");
+        model.addAttribute("body", "<img src='/img/MostPopularJobTitlesBarChart.jpg'>");
+        return "template";
     }
 
-    @GetMapping("Most-Popular-Areas")
-    public ResponseEntity<String> MostPopularAreas() throws IOException {
-        return getResponse(datasetToTable(wuzzufDao.mostPopularAreas()));
+    @GetMapping("Most_Popular_Areas")
+    public String MostPopularAreas(Model model) {
+        model.addAttribute("body", datasetToTable(wuzzufDao.mostPopularAreas()));
+        return "template";
     }
 
-    @GetMapping("Most-Popular-Areas-Bar-Chart")
-    public ResponseEntity<String> MostPopularAreasBarChart() throws IOException {
-        wuzzufDao.displayBarChart(wuzzufDao.mostPopularAreas(), "Most Popular Areas", "Area", "Count");
-        return getResponse("<img src='MostPopularAreasBarChart.jpg'>");
+    @GetMapping("Most_Popular_Areas_Bar_Chart")
+    public String MostPopularAreasBarChart(Model model) throws IOException {
+        wuzzufDao.displayBarChart(wuzzufDao.mostPopularAreas(),
+                "Most Popular Areas",
+                "Area",
+                "Count");
+        model.addAttribute("body", "<img src='/img/MostPopularAreasBarChart.jpg'>");
+        return "template";
     }
 
-    @GetMapping("Most-Demanded-Skills")
-    public ResponseEntity<String> MostDemandedSkills() throws IOException {
-        return getResponse(datasetToTable(wuzzufDao.getMostDemandedSkills()));
+    @GetMapping("Most_Demanded_Skills")
+    public String MostDemandedSkills(Model model) {
+        model.addAttribute("body", datasetToTable(wuzzufDao.getMostDemandedSkills()));
+        return "template";
     }
 
-    @GetMapping("Factorize-YearsExp")
-    public ResponseEntity<String> FactorizeYearsExp() throws IOException {
-        return getResponse(datasetToTable(wuzzufDao.factorizeColumn("yearsExp")));
+    @GetMapping("Factorize_YearsExp")
+    public String FactorizeYearsExp(Model model) {
+        model.addAttribute("body", datasetToTable(wuzzufDao.factorizeColumn("yearsExp")));
+        return "template";
     }
 }
