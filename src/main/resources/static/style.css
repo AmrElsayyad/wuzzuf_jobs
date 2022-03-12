@@ -23,24 +23,25 @@ body
 .welcome
 {
     width: 100%;
-    height: 650px;
+    height: 100vh;
     background: #8c7207;
 }
 
 .welcome h1
 {
     color: #dddddd;
-    padding-top:200px;
+    padding-top:13%;
     text-align: center;
-    font-size: 450%;
+    font-size: 6vw;
 }
 
 .welcome h4
 {
     color:rgb(180, 175, 175);
-    padding: 25px 0px;
+    /*padding: 25px 400px;*/
+    margin: 2%;
+    font-size: 3vw;
     text-align: center;
-    font-size: 200%;
 }
 
 /* style welcome part */
@@ -49,10 +50,10 @@ body
 /* style project part */
 .project
 {
-    width: 95%;
-    min-height: 200px;
-    position: relative;
-    margin: 50px;
+    width: 100%;
+    min-height: 100vh;
+    /*position: relative;*/
+    margin: 10vh;
 }
 
 .project h2
@@ -60,14 +61,13 @@ body
     padding: 0px 20px 40px 0px;
     text-align: center;
     color: rgb(80, 77, 77);
-    font-size: 40px;
+    font-size: 3vw;
 }
 
 /* Style the tab */
 .tab {
-    margin: 0 40px;
     width: 100%;
-    min-height: 50px;
+    min-height: 5vh;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -78,15 +78,14 @@ body
 .tab button {
     background-color: #8c7207;
     color: #dddddd ;
-    padding: 22px 16px;
-    margin: 40px 30px;
-    width: 27%;
+    padding: 5vh 0vh;
+    margin: 6vh auto;
+    width: 25.5%;
     border: 2px solid #ccc;
     outline: none;
-    /* text-align: left;*/
     cursor: pointer;
     transition: 0.3s;
-    font-size: 17px;
+    font-size: 1.22vw;
 }
 
 /* Change background color of buttons on hover */
@@ -100,10 +99,36 @@ body
     background-color: #ccc;
 }
 
+/* Style the tab content */
+.tabcontent {
+    float: left;
+    padding: 0px 12px;
+    border: 1px solid #ccc;
+    width: 70%;
+    border-left: none;
+    height: 300px;
+}
+
 /* Style the link */
 .link {
     text-decoration: none;
     color: black;
+}
+
+/* Style the table */
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------*/
@@ -116,62 +141,63 @@ body
     background: #ccc;
     border-top: solid 2px #8c7207;
     border-width: 2px;
+    /* increase */
     margin:20px 0px;
 }
 .team h2
 {
     text-align: center;
     color: rgb(80, 77, 77);
-    padding: 10px;
-    font-size: 30px;
+    padding: 8vh;
+    font-size: 2.5vw;
 }
 .card
 {
-    position: relative;
-    width: 43%;
-    height: 250px;
-    /* background: #fff; */
+    width: 48%;
+    height: 20vw;
     overflow: hidden;
     border-radius: 10px;
-    margin: 20px 20px 20px 20px;
-    display: inline-block;
+    margin: 0vh auto;
+    /*display: inline-block;*/
+    float:left;
 }
 .card .circle
 {
-    position: absolute;
-    left:40px;
-    width: 150px;
+    width:30%;
     height: 100%;
-    /*transform: translateX(-50%);*/
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     clip-path: circle();
     float: left;
+    margin: -6vh 0vh 0vh 10vh
 }
-.card .circle::before
+/*.card .circle::before
 {
     content: '';
-    position: absolute;
-    top: -8px;
+    /*position: absolute;
+   /* top: -8px;
     left: -16px;
     width: 100%;
-    height: 100%;
-    /*box-shadow: 0 0 0 2px #8c7207;*/
+    height: 100%;*/
+    /*box-shadow: 0 0 0 2px #8c7207;
     border-radius: 50%;
     z-index: 2;
     pointer-events: none;
-}
+}*/
 .circle .imgBox
 {
-    position: absolute;
-    bottom: 0;
-    /* transform: translateX(-50%); */
     width: 100%;
-    height: 250px;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 .imgBox img
 {
-    position: absolute;
+   /* position: absolute;
     top: 0;
-    left: 0;
+    left: 0;*/
     transition: all 0.5s;
     height: 100%;
     width: 100%;
@@ -183,66 +209,71 @@ body
 }
 .card .content
 {
-    position: absolute;
-    right: 0px;
-    width: 250px;
+    width: 50%;
     height: 100%;
-    padding: 20px 5px;
+    float: right;
+    /*padding: 20px 5px;*/
 }
 .content .fa-linkedin
 {
-    padding: 2px 4px;
+    padding: 0.75vh 0.75vh;
     color: #fff;
     background: #0077b5;
-    border-radius: 2px;
+    border-radius: 1vh;
+
 }
 
 .content .fa-github
 {
-    padding: 2px 4px;
+    padding: 0.75vh 0.75vh;
     color: rgb(19, 18, 18);
-    border-radius: 2px;
+    border-radius: 2vh;
     transform: scale(1.2);
+    margin-left: 4vh;
 
 }
 
 .content h3
 {
-    font-size: 1.4em;
+    font-size: 1.5vw;
     color: rgb(80, 77, 77);
-    margin-top: 25px;
-    margin-bottom: 30px;
+    margin-top: 2vh;
+    margin-bottom: 2.5vh;
 }
 .content .textIcon
 {
     width: 100%;
+    margin: 10vh 0vh;
+    max-height: 3vh;
 }
 .content a
 {
     display: inline-block;
-    width: 50px;
-    padding-left: 10px;
+    width: 2vh;
+    padding-left: 3vh;
 }
 
 .content h4
 {
     color: #8c7207;
-    font-weight: 200;
+    font-weight:3px;
+    font-size: 1.1vw;
     /* padding: 10px; */
-    margin-bottom: 15px;
+    margin-bottom: 2vh;
+    height: 8vh;
 }
 
 /* -------------------------------------------------------------------------------------------------------------------------------------*/
 /* style footer part */
 .footer
 {
-    position: relative;
-    min-height: 20px;
+    min-height: 100%;
     width:100%;
 }
 .footer h3
 {
     text-align: center;
     color: rgb(80, 77, 77);
-    margin:10px;
+    margin-bottom:2vh;
+    font-size: 1.5vw;
 }
