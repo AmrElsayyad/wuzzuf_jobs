@@ -4,7 +4,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /*font-family: "Poppins",sans-serif;*/
     font-family: "Lato", cursive;
 }
 body
@@ -15,7 +14,6 @@ body
     flex-wrap: wrap;
     min-height: 100vh;
     width: 100%;
-    /*background: radial-gradient(#777,#222);*/
     background: #dddddd;
 }
 
@@ -38,7 +36,6 @@ body
 .welcome h4
 {
     color:rgb(180, 175, 175);
-    /*padding: 25px 400px;*/
     margin: 2%;
     font-size: 3vw;
     text-align: center;
@@ -52,7 +49,6 @@ body
 {
     width: 100%;
     min-height: 100vh;
-    /*position: relative;*/
     margin: 10vh;
 }
 
@@ -141,7 +137,6 @@ tr:nth-child(even) {
     background: #ccc;
     border-top: solid 2px #8c7207;
     border-width: 2px;
-    /* increase */
     margin:20px 0px;
 }
 .team h2
@@ -158,7 +153,6 @@ tr:nth-child(even) {
     overflow: hidden;
     border-radius: 10px;
     margin: 0vh auto;
-    /*display: inline-block;*/
     float:left;
 }
 .card .circle
@@ -172,19 +166,6 @@ tr:nth-child(even) {
     float: left;
     margin: -6vh 0vh 0vh 10vh
 }
-/*.card .circle::before
-{
-    content: '';
-    /*position: absolute;
-   /* top: -8px;
-    left: -16px;
-    width: 100%;
-    height: 100%;*/
-    /*box-shadow: 0 0 0 2px #8c7207;
-    border-radius: 50%;
-    z-index: 2;
-    pointer-events: none;
-}*/
 .circle .imgBox
 {
     width: 100%;
@@ -195,9 +176,6 @@ tr:nth-child(even) {
 }
 .imgBox img
 {
-   /* position: absolute;
-    top: 0;
-    left: 0;*/
     transition: all 0.5s;
     height: 100%;
     width: 100%;
@@ -212,39 +190,13 @@ tr:nth-child(even) {
     width: 50%;
     height: 100%;
     float: right;
-    /*padding: 20px 5px;*/
 }
-.content .fa-linkedin
-{
-    padding: 0.75vh 0.75vh;
-    color: #fff;
-    background: #0077b5;
-    border-radius: 1vh;
-
-}
-
-.content .fa-github
-{
-    padding: 0.75vh 0.75vh;
-    color: rgb(19, 18, 18);
-    border-radius: 2vh;
-    transform: scale(1.2);
-    margin-left: 4vh;
-
-}
-
 .content h3
 {
     font-size: 1.5vw;
     color: rgb(80, 77, 77);
     margin-top: 2vh;
     margin-bottom: 2.5vh;
-}
-.content .textIcon
-{
-    width: 100%;
-    margin: 10vh 0vh;
-    max-height: 3vh;
 }
 .content a
 {
