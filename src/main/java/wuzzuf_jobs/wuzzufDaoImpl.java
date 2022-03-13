@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.apache.spark.sql.functions.regexp_replace;
@@ -161,11 +162,12 @@ public class WuzzufDaoImpl implements WuzzufDao {
     public void displayPieChart(Dataset<Row> dataset, String title) throws IOException {
 
         PieChart pieChart = new PieChartBuilder().title(title).build();
-        for (int i = 0; i < 5; i++) {
-            Row job = dataset.collectAsList().get(i);
+        List<Row> rowList = dataset.collectAsList();
+        for (int i = 0; i < 10; i++) {
+            Row job = rowList.get(i);
             pieChart.addSeries(job.getString(0), job.getLong(1));
         }
-        pieChart.addSeries("Other", dataset.except(dataset.limit(5)).count());
+        pieChart.addSeries("Other", rowList.stream().skip(10).mapToLong(row -> row.getLong(1)).sum());
 
 
         BitmapEncoder.saveBitmap(pieChart,

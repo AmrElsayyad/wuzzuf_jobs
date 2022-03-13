@@ -250,7 +250,6 @@ tr:nth-child(even) {
 {
     display: inline-block;
     width: 2vh;
-    padding-left: 3vh;
 }
 
 .content h4
